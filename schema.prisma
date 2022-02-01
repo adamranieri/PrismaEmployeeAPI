@@ -1,0 +1,33 @@
+datasource db{
+    provider = "postgresql"
+    //postgres://adam:mypass@ranieri-rev-points-server.postgres.database.azure.com/postgres?sslmode=require
+    url = env("POSTGRES_CONN") 
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Employee {
+    id Int @id @default(autoincrement())
+    isManager Boolean @default(false)
+    fname String 
+    lname String 
+    username String @unique
+    password String
+    worklogs WorkLog[]
+
+}
+
+model WorkLog {
+    id Int @id @default(autoincrement())
+    timestamp DateTime
+    employee Employee @relation(fields: [employeeId], references: [id])
+    employeeId Int 
+    action Status
+}
+
+enum Status{
+    CHECKIN
+    CHECKOUT
+}
